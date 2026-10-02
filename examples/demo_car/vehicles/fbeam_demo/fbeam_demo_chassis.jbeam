@@ -1,0 +1,55 @@
+{
+"fbeam_demo_chassis": {
+    "information":{
+        "authors":"FBeam",
+        "name":"FBeam demo tube frame",
+    }
+    "slotType" : "main",
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$demo_arb_F", "range", "N/m", "Suspension", 20000, 5000, 60000, "Front ARB", "Demo team variable"]
+    ],
+    // Simple box frame. BeamNG axes: X left/right, Y forward(-)/back(+), Z up.
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"group": "fbeam_frame"},
+        // lower rails
+        {"nodeWeight": 5.5}
+        ["fl1", 0.5, -1.5, 0.3], ["fr1", -0.5, -1.5, 0.3]
+        {"nodeWeight": 9.0}
+        ["ml1", 0.5,  0.0, 0.3], ["mr1", -0.5,  0.0, 0.3]
+        {"nodeWeight": 3.8}
+        ["rl1", 0.5,  1.5, 0.3], ["rr1", -0.5,  1.5, 0.3]
+        // upper rails
+        {"nodeWeight": 3.5}
+        ["fl2", 0.5, -1.5, 0.8], ["fr2", -0.5, -1.5, 0.8]
+        {"nodeWeight": 6.8}
+        ["ml2", 0.5,  0.0, 0.8], ["mr2", -0.5,  0.0, 0.8]
+        {"nodeWeight": 5.2}
+        ["rl2", 0.5,  1.5, 0.8], ["rr2", -0.5,  1.5, 0.8]
+        // hub reference nodes for the wheelbase check
+        {"nodeWeight": 1.5},
+        ["hfl", 0.7, -1.25, 0.3], ["hfr", -0.7, -1.25, 0.3]
+        ["hrl", 0.7,  1.25, 0.3], ["hrr", -0.7,  1.25, 0.3]
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamSpring": 5000000, "beamDamp": 150, "beamDeform": 30000, "beamStrength": 80000},
+        {"fbeamSection": "tube 40x2 steel_1018"},
+        // longitudinal rails
+        ["fl1","ml1"], ["ml1","rl1"], ["fr1","mr1"], ["mr1","rr1"]
+        ["fl2","ml2"], ["ml2","rl2"], ["fr2","mr2"], ["mr2","rr2"]
+        // cross members
+        ["fl1","fr1"], ["ml1","mr1"], ["rl1","rr1"]
+        ["fl2","fr2"], ["ml2","mr2"], ["rl2","rr2"]
+        // verticals
+        ["fl1","fl2"], ["fr1","fr2"], ["ml1","ml2"], ["mr1","mr2"], ["rl1","rl2"], ["rr1","rr2"]
+        // side diagonals
+        ["fl1","ml2"], ["ml1","rl2"], ["fr1","mr2"], ["mr1","rr2"]
+        // hub mounts, light tube
+        {"fbeamSection": "tube 30x2 steel_1018", "beamSpring": 2000000, "beamDeform": 20000, "beamStrength": 30000},
+        ["hfl","fl1"], ["hfl","ml1"], ["hfr","fr1"], ["hfr","mr1"]
+        ["hrl","rl1"], ["hrl","ml1"], ["hrr","rr1"], ["hrr","mr1"]
+    ],
+}
+}

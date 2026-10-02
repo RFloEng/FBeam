@@ -1,0 +1,8 @@
+{
+  "format": 2,
+  "model": "fbeam_demo_cage",
+  "parts": {
+    "fbeam_demo_cage": "fbeam_demo_cage"
+  },
+  "vars": {}
+}

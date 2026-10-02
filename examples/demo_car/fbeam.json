@@ -1,0 +1,10 @@
+{
+  "team": "Demo Team",
+  "car_id": "FB-000",
+  "beamng_version": "TBD",
+  "pc": "vehicles/fbeam_demo/race.pc",
+  "chassis_parts": ["fbeam_demo_chassis"],
+  "front_axle_nodes": ["hfl", "hfr"],
+  "rear_axle_nodes": ["hrl", "hrr"],
+  "ballast_nodes": []
+}

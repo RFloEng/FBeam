@@ -1,0 +1,136 @@
+{
+  "_comment": "FBeam Technical Regulations v1.0, machine-readable limits. Values marked TBD wait for the in-game check of the spec donor car.",
+  "version": "1.0.0",
+  "materials": {
+    "steel_1018": {
+      "E_GPa": 205,
+      "sy_MPa": 365,
+      "su_MPa": 440,
+      "rho_kg_m3": 7850
+    },
+    "steel_4130n": {
+      "E_GPa": 205,
+      "sy_MPa": 460,
+      "su_MPa": 560,
+      "rho_kg_m3": 7850
+    },
+    "al_6061_t6": {
+      "E_GPa": 69,
+      "sy_MPa": 276,
+      "su_MPa": 310,
+      "rho_kg_m3": 2700
+    }
+  },
+  "sections": {
+    "min_wall_mm": {
+      "tube": 1.5,
+      "sheet": 0.7
+    },
+    "max_sheet_tributary_mm": 150
+  },
+  "chassis": {
+    "allowed_beam_types": [
+      "NORMAL",
+      "SUPPORT",
+      "ANISOTROPIC"
+    ],
+    "joint_allowance": 0.15,
+    "max_excess_per_node_kg": 2.0,
+    "damping_zeta_max": 0.5,
+    "tolerance": 0.005
+  },
+  "dimensions": {
+    "_comment": "Regulations 6: the Ibishu Covet's envelope (donor files), FIA-style arch allowance of 40 mm per side.",
+    "wheelbase_mm": [2450, 2550],
+    "max_length_mm": 3920,
+    "max_body_width_mm": 1720,
+    "max_width_over_arches_mm": 1800,
+    "max_front_overhang_mm": 760,
+    "max_rear_overhang_mm": 680
+  },
+  "spec_parts": {
+    "_comment": "Verified against the Covet files (rally_gravel config); see rules/donor_covet.json. Enforcement of the slot selections starts with the Spec Kit, when FBeam cars mount the donor parts.",
+    "donor_vehicle": "covet",
+    "donor_config": "rally_gravel",
+    "sealed_part_names": [
+      "covet_engine_1.8_sohc",
+      "covet_engine_internals_2.0_stage2",
+      "covet_engine_ecu_2.0_race",
+      "covet_intake_2.0_itb",
+      "covet_exhaust_race",
+      "covet_transmission_6M_race",
+      "covet_flywheel_light",
+      "covet_differential_F_race",
+      "covet_finaldrive_F_race",
+      "tire_F_165_70_14_rally",
+      "tire_R_165_70_14_rally",
+      "wheel_17a_14x5.5_F",
+      "wheel_17a_14x5.5_R"
+    ],
+    "enforce_required_parts": false,
+    "required_parts": {
+      "covet_engine": "covet_engine_1.8_sohc",
+      "covet_engine_internals_2.0": "covet_engine_internals_2.0_stage2",
+      "covet_engine_ecu_2.0": "covet_engine_ecu_2.0_race",
+      "covet_transmission": "covet_transmission_6M_race",
+      "covet_flywheel": "covet_flywheel_light",
+      "tire_F_14x5.5": "tire_F_165_70_14_rally",
+      "tire_R_14x5.5": "tire_R_165_70_14_rally",
+      "wheel_F_4": "wheel_17a_14x5.5_F",
+      "wheel_R_4": "wheel_17a_14x5.5_R"
+    }
+  },
+  "spec_wheel": {
+    "_comment": "Regulations 5. Values the spec tyre and rim set in BeamNG (common files, rally_gravel Covet). Sealed: the parts come from the game and may not be redeclared. Tyre pressure is open at stock 27 psi +/- 6.",
+    "tyre_part": "tire_F/R_165_70_14_rally",
+    "rim_part": "wheel_17a_14x5.5_F/R",
+    "radius_m": 0.297,
+    "tire_width_m": 0.15,
+    "hub_radius_m": 0.195,
+    "hub_width_m": 0.16,
+    "wheel_offset_m": -0.04,
+    "num_rays": 16,
+    "stock_pressure_psi": 27,
+    "mass_per_wheel_kg": 25.2
+  },
+  "tuning": {
+    "_comment": "Open variables of Spec Parts, with allowed [min, max]. Team-part variables use the min/max their part declares.",
+    "open_spec_variables": {
+      "$tirepressure_F": [21, 33],
+      "$tirepressure_R": [21, 33],
+      "$finaldrive_F": [3.89, 5.25],
+      "$lsdpreload_F": [0, 500],
+      "$lsdlockcoef_F": [0, 0.5],
+      "$lsdlockcoefrev_F": [0, 0.5]
+    },
+    "_sealed_comment": "Donor variables that are open in the game but sealed in FBeam (regulations 4.2, 4.5). The donor defaults differ from the rally_gravel values, so a car either sets each one to exactly this value or leaves it to the Spec Kit.",
+    "sealed_spec_values": {
+      "$revLimiterRPM": 8600,
+      "$revLimiterCutTime": 0.1,
+      "$gear_R": 3.58,
+      "$gear_1": 3.0,
+      "$gear_2": 2.33,
+      "$gear_3": 1.86,
+      "$gear_4": 1.5,
+      "$gear_5": 1.21,
+      "$gear_6": 1
+    }
+  },
+  "exploits": {
+    "forbidden_sections": [
+      "thrusters"
+    ],
+    "allowed_controllers": [],
+    "min_node_weight_kg": 0.1
+  },
+  "mass": {
+    "_comment": "Regulations 6.11: FIA rallycross scale by spec engine displacement, with driver.",
+    "min_race_mass_kg": 1100,
+    "class": "1,600-2,000 cc"
+  },
+  "aero": {
+    "_comment": "Regulations 7.4.5: reference maximum published by the Technical Delegate (to calibrate in-game).",
+    "max_wing_cl": 1.4,
+    "splitter_max_ahead_of_bumper_mm": 50
+  }
+}

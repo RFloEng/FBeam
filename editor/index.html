@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FBeam Car Editor</title>
+<link rel="stylesheet" href="style.css">
+<!-- Pyodide runs the FBeam Python core in the page; app.js fetches the .py files from the repo root,
+     so serve the repo root over http (python -m http.server) and open /editor/. -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script type="importmap">
+{"imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+  "zipjs": "https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.52/index.min.js"
+}}
+</script>
+</head>
+<body>
+<!-- Every id below is looked up by app.js ($(id)); data-space buttons pick the workspace,
+     data-tool buttons the chassis drawing tool. -->
+<header>
+  <div class="brand">FBeam car editor <span class="tag">prototype</span></div>
+  <nav class="spaces">
+    <button data-space="vehicle" title="A vanilla BeamNG vehicle from your own install as the base: parts, tuning, configurations">Base car</button>
+    <button class="on" data-space="chassis">Chassis</button>
+    <button data-space="suspension">Suspension</button>
+    <button data-space="body" title="Silhouette body shell: dimensions, panels, mass (6.2-6.9)">Body</button>
+    <button data-space="components" title="Engine, driver, fuel, ballast: full-car mass, CG and inertia">Components</button>
+    <button data-space="aero" title="Rear wing and front splitter: downforce, drag, balance (7.4)">Aero</button>
+  </nav>
+  <div class="files">
+    <select id="example" title="Start from an example">
+      <option value="full">Example: full chassis</option>
+      <option value="cage">Example: cage only</option>
+      <option value="empty">Empty</option>
+    </select>
+    <button id="open" title="Open a .fbeam.json model">Open</button>
+    <button id="save" title="Save the model as .fbeam.json">Save</button>
+    <input type="file" id="openfile" accept=".json" hidden>
+    <button id="svjin" title="Import a Standard Vehicle JSON (SVJ) file: FBeam round trip, or a skeleton from any SVJ">Import SVJ</button>
+    <button id="svjout" title="Export the car as Standard Vehicle JSON (SVJ, SAE J670) for vehicle-dynamics tools">Export SVJ</button>
+    <input type="file" id="svjfile" accept=".json,.zip,.glb,.gltf,.bin" multiple hidden>
+    <!-- base car: the user's BeamNG content/vehicles folder (or a mod folder), or single vehicle zips -->
+    <input type="file" id="bngdir" webkitdirectory multiple hidden>
+    <input type="file" id="bngzips" accept=".zip" multiple hidden>
+  </div>
+  <button id="build" class="primary" disabled>Build car + run checker</button>
+</header>
+
+<main>
+  <!-- Left panel: one container per workspace, shown by drawLists(); the chassis one is static,
+       the others are filled by drawSuspList / drawCompList / drawAeroList (body has none). -->
+  <aside id="left">
+    <div id="leftveh" hidden></div>   <!-- base car: filled by drawVehList -->
+    <div id="leftsusp" hidden></div>
+    <div id="leftcomp" hidden></div>
+    <div id="leftaero" hidden></div>
+    <div id="leftchassis">
+    <h2>Tubes <span id="ntubes" class="q"></span></h2>
+    <ul id="members"></ul>
+    <h2>Joints <span id="njoints" class="q"></span></h2>
+    <ul id="joints"></ul>
+    </div>
+  </aside>
+
+  <section id="viewwrap">
+    <div id="view"></div>   <!-- three.js canvas -->
+    <div id="toolbar">
+      <div id="drawtools">   <!-- chassis workspace only -->
+      <div class="tools">
+        <button data-tool="select" class="on" title="Select (S)">Select</button>
+        <button data-tool="joint" title="Add joint (J)">Joint</button>
+        <button data-tool="tube" title="Draw tube (T)">Tube</button>
+        <button data-tool="split" title="Split a tube with a joint (P)">Split</button>
+        <button data-tool="delete" title="Delete (D or Del)">Delete</button>
+        <button id="undo" title="Undo (Ctrl+Z)">Undo</button>
+      </div>
+      <div class="toolopts">
+        <label>Work plane
+          <select id="plane">
+            <option value="top">Horizontal (Z)</option>
+            <option value="side">Side (X)</option>
+            <option value="front">Front (Y)</option>
+          </select>
+        </label>
+        <label>New tube
+          <select id="newrole">
+            <option value="frame">Chassis frame</option>
+            <option value="other">Cage: other</option>
+            <option value="main">Cage: main hoop</option>
+          </select>
+        </label>
+      </div>
+      </div>
+      <div id="susptools" hidden>   <!-- suspension workspace only -->
+        <label>Wheel travel (both sides, heave)
+          <input type="range" id="travel" min="-100" max="100" step="5" value="0">
+          <b id="travelv">0 mm</b></label>
+      </div>
+      <div id="hint" class="quiet"></div>
+    </div>
+    <div id="legend"></div>
+    <div id="viewtools">
+      <label>Colour
+        <select id="colour">
+          <option value="mode">Failure mode</option>
+          <option value="role">Frame / cage</option>
+          <option value="load">Allowed load (beamDeform)</option>
+          <option value="mass">Mass per metre</option>
+        </select>
+      </label>
+      <label>Show
+        <select id="show">
+          <option value="tubes">Tubes</option>
+          <option value="jbeam">jbeam (nodes + beams)</option>
+          <option value="both">Both</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="mirror" checked> Symmetric</label>
+      <label><input type="checkbox" id="ghosts" checked> Wheels + envelope</label>
+      <label id="meshtoggle" hidden><input type="checkbox" id="meshes" checked> SVJ meshes</label>
+    </div>
+    <div id="loading">Loading Python engine…</div>   <!-- removed by boot() once Python is ready -->
+  </section>
+
+  <aside id="right">
+    <!-- Right panel: drawInspector() and the per-workspace inspectors replace its contents. -->
+    <div id="inspector"><p class="quiet">Click a tube or a joint.</p></div>
+  </aside>
+</main>
+
+<!-- Footer: key numbers (draw*Budget), rule findings (showIssues) and timings (drawTiming). -->
+<footer>
+  <div id="budget"></div>
+  <div id="issues"></div>
+  <div id="timing" class="quiet"></div>
+</footer>
+
+<!-- SVJ import options (app.js: svjin opens it, svjgo picks the file). Applying keeps the current frame. -->
+<dialog id="svjdlg">
+  <h2>Import SVJ</h2>
+  <label><input type="checkbox" id="svjapply" checked> Apply to the current frame</label>
+  <div id="svjsub">
+    <label><input type="checkbox" id="svjmove" checked> Move frame joints with their pickups (tubes follow)</label>
+    <label><input type="checkbox" id="svjlayout" checked> Take the suspension layout</label>
+    <label><input type="checkbox" id="svjrates" checked> Take springs and dampers</label>
+    <label><input type="checkbox" id="svjmesh" checked> Copy meshes (reference geometry, kept on export)</label>
+  </div>
+  <p class="quiet" id="svjhint">Unticked: the file replaces the model (an FBeam file restores its own frame; any other file gives a skeleton of joints at its pickups).</p>
+  <div class="inl"><button id="svjgo" class="primary">Choose file…</button><button id="svjcancel">Cancel</button></div>
+</dialog>
+<script type="module" src="app.js"></script>
+</body>
+</html>

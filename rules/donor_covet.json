@@ -1,0 +1,590 @@
+{
+ "_comment": "Facts derived from the vanilla Ibishu Covet files (config rally_gravel) with tools/donor_report.py. No game file content is stored in this repository; re-run the tool against a local donor/ folder to refresh. Node masses are jbeam nodeWeight sums (default 25 kg where unset).",
+ "vehicle": "covet",
+ "config": "rally_gravel",
+ "beamng_version": "TBD (record from the game install)",
+ "powertrain": {
+  "layout": "FWD, transverse front engine",
+  "engine": {
+   "part": "covet_engine_1.8_sohc",
+   "displacement_l": 1.8,
+   "base_maxRPM": 6500,
+   "idleRPM": 900,
+   "inertia": 0.08,
+   "friction": 14,
+   "modifiers": [
+    "covet_engine_internals_2.0_stage2 (torque x0.81-2.2 by rpm, maxRPM +2000)",
+    "covet_intake_2.0_itb (adds 4-36 N·m by rpm)",
+    "covet_engine_ecu_2.0_race (rev limiter variable)",
+    "covet_exhaust_race"
+   ],
+   "rev_limiter_rpm": 8600,
+   "offline_peak_torque_Nm": [
+    231,
+    6300
+   ],
+   "offline_peak_power_kW": [
+    167,
+    7500
+   ],
+   "_offline_note": "Base curve x internals multiplier + intake adder, linear interpolation. Exhaust and other in-game modifiers are not included; confirm with the in-game torque curve UI. Community wiki: 187 bhp / 202 N·m."
+  },
+  "gearbox": {
+   "part": "covet_transmission_6M_race",
+   "type": "6-speed manual (frictionClutch + manualGearbox)",
+   "friction": 0.76,
+   "ratios_rally_gravel": {
+    "R": 3.58,
+    "1": 3.0,
+    "2": 2.33,
+    "3": 1.86,
+    "4": 1.5,
+    "5": 1.21,
+    "6": 1.0
+   },
+   "ratios_part_default": {
+    "R": 3.58,
+    "1": 3.27,
+    "2": 2.13,
+    "3": 1.52,
+    "4": 1.15,
+    "5": 0.92,
+    "6": 0.74
+   },
+   "_note": "Every ratio is an in-game range variable (0.5-5). FBeam seals them at the rally_gravel values (rules tuning.sealed_spec_values)."
+  },
+  "final_drive": {
+   "part": "covet_finaldrive_F_race",
+   "variable": "$finaldrive_F",
+   "rally_gravel": 5.25,
+   "part_range": [
+    2.0,
+    6.0
+   ],
+   "part_default": 4.39,
+   "fixed_alternatives": [
+    "covet_finaldrive_F_389",
+    "covet_finaldrive_F_406",
+    "covet_finaldrive_F_425",
+    "covet_finaldrive_F_525"
+   ]
+  },
+  "differential": {
+   "part": "covet_differential_F_race",
+   "variables": {
+    "$lsdpreload_F": {
+     "rally_gravel": 80,
+     "range": [
+      0,
+      500
+     ],
+     "unit": "N·m"
+    },
+    "$lsdlockcoef_F": {
+     "rally_gravel": 0.25,
+     "range": [
+      0,
+      0.5
+     ]
+    },
+    "$lsdlockcoefrev_F": {
+     "rally_gravel": 0.025,
+     "range": [
+      0,
+      0.5
+     ]
+    }
+   }
+  },
+  "flywheel": "covet_flywheel_light",
+  "transfercase": "covet_transfercase_FWD",
+  "device_chain": "mainEngine > clutch > gearbox > transfercase > torsionReactorF > differential_F > wheelaxleFL/FR > spindleFL/FR"
+ },
+ "wheels_and_tyres": {
+  "_source": "BeamNG common files (common.zip): tires_14x5.5 rally and wheels_4lug rally_wheels_F/R_4",
+  "tyre": {
+   "parts": [
+    "tire_F_165_70_14_rally",
+    "tire_R_165_70_14_rally"
+   ],
+   "slots": [
+    "tire_F_14x5.5",
+    "tire_R_14x5.5"
+   ],
+   "radius_m": 0.297,
+   "outer_diameter_mm": 594,
+   "nominal_diameter_mm": 587,
+   "tireWidth_m": 0.15,
+   "pressure_var": "$tirepressure_F / _R, default 27 psi, game range 0-50; sidewall spring = 850 x pressure",
+   "grip": {
+    "frictionCoef": 1.0,
+    "slidingFrictionCoef": 1.05,
+    "stribeckExponent": 1.5,
+    "treadCoef": 0.75,
+    "noLoadCoef": 1.22,
+    "fullLoadCoef": 0.5,
+    "loadSensitivitySlope": 6.2e-05,
+    "softnessCoef": 1
+   },
+   "node_weight_kg": 0.145,
+   "_note": "Front and rear tyres differ only in their pressure variable."
+  },
+  "rim": {
+   "parts": [
+    "wheel_17a_14x5.5_F",
+    "wheel_17a_14x5.5_R"
+   ],
+   "slots": [
+    "wheel_F_4",
+    "wheel_R_4"
+   ],
+   "brand": "Dreid RallyPro, 4-lug",
+   "hubRadius_m": 0.195,
+   "hubWidth_m": 0.16,
+   "wheelOffset_m": -0.04,
+   "numRays": 16,
+   "hubNodeWeight_kg": 0.36,
+   "axle_nodes": {
+    "front": [
+     "fw1l",
+     "fw1ll",
+     "fw1r",
+     "fw1rr"
+    ],
+    "rear": [
+     "rw1l",
+     "rw1ll",
+     "rw1r",
+     "rw1rr"
+    ],
+    "weight_kg": 4.5,
+    "local_x_m": [
+     0.31,
+     0.57
+    ]
+   },
+   "default_tyre": "tire_F/R_165_70_14_rally",
+   "_note": "Front and rear rims are identical apart from node names."
+  },
+  "mass_per_wheel_kg": {
+   "axle_nodes": 9.0,
+   "hub_ring": 11.52,
+   "tread": 4.64,
+   "total": 25.16,
+   "_note": "pressureWheels generates numRays x 2 hub nodes and numRays x 2 tyre nodes."
+  },
+  "mounting": {
+   "how": "The hub part (covet_hub_F_4) holds the wheel slot wheel_F_4 with a slots2 nodeOffset {x: trackwidth or trackoffset + 0.25, y: -1.25, z: 0.288}; the wheel part's nodes are local to that offset.",
+   "wheeldata": "covet_wheeldata_F declares the pressureWheels rows FL/FR: node1/node2 = fw1ll/fw1l (axle nodes), nodeArm = fh6l, torqueCoupling fh1l, torqueArm fh2l, steer axis fh2l/fh1l, torque joint tra3/tra2 (differential), wheelDir -1 left / 1 right. Rear: rw1ll/rw1l, nodeArm rh4l, torqueCoupling rx2l, torqueArm rx1l.",
+   "fbeam_consequence": "An FBeam car mounts the spec wheel through its own hub and wheeldata parts: a slot wheel_F_4 / wheel_R_4 with a nodeOffset at the wheel centre, and pressureWheels rows naming its own upright nodes."
+  },
+  "other_rally_tyres": {
+   "tire_F_175_70_15_rally": {
+    "slot": "tire_F_15x6",
+    "radius_m": 0.314,
+    "width_m": 0.175
+   },
+   "tire_F_195_65_15_rally": {
+    "slot": "tire_F_15x6",
+    "radius_m": 0.321,
+    "width_m": 0.175
+   },
+   "tire_F_205_65_15_rally": {
+    "slot": "tire_F_15x7",
+    "radius_m": 0.326,
+    "width_m": 0.195
+   },
+   "tire_F_225_50_15_rally": {
+    "slot": "tire_F_15x8",
+    "radius_m": 0.304,
+    "width_m": 0.205
+   },
+   "tire_F_245_45_16_rally": {
+    "slot": "tire_F_16x9",
+    "radius_m": 0.317,
+    "width_m": 0.235
+   }
+  }
+ },
+ "reference_setup": {
+  "spring_N_per_m": {
+   "F": 68500,
+   "R": 25500
+  },
+  "arb_N_per_m": {
+   "F": 44000,
+   "R": 10000
+  },
+  "brake_bias": 0.68,
+  "damp_bump": {
+   "F": 3800,
+   "R": 1500
+  },
+  "damp_rebound": {
+   "F": 5900,
+   "R": 2200
+  }
+ },
+ "parts": {
+  "covet_engine_1.8_sohc": {
+   "slot_type": "covet_engine",
+   "node_count": 10,
+   "node_mass_kg": 142.0,
+   "interface_nodes": [
+    "f11",
+    "f11rr",
+    "f13ll",
+    "f13rr",
+    "f15",
+    "f15l"
+   ],
+   "interface_from": [
+    "covet_body"
+   ]
+  },
+  "covet_transmission_6M_race": {
+   "slot_type": "covet_transmission",
+   "node_count": 4,
+   "node_mass_kg": 24.0,
+   "interface_nodes": [
+    "e1l",
+    "e1r",
+    "e2l",
+    "e2r",
+    "e3l",
+    "e3r",
+    "e4l",
+    "e4r"
+   ],
+   "interface_from": [
+    "covet_engine_1.8_sohc"
+   ]
+  },
+  "covet_differential_F_race": {
+   "slot_type": "covet_differential_F",
+   "node_count": 2,
+   "node_mass_kg": 18.0,
+   "interface_nodes": [],
+   "interface_from": []
+  },
+  "covet_halfshaft_F": {
+   "slot_type": "covet_halfshaft_F",
+   "node_count": 0,
+   "node_mass_kg": 0,
+   "interface_nodes": [
+    "fw1l",
+    "fw1r",
+    "tra2",
+    "tra3"
+   ],
+   "interface_from": [
+    "covet_differential_F_race"
+   ]
+  },
+  "covet_enginemounts_heavy": {
+   "slot_type": "covet_enginemounts",
+   "node_count": 1,
+   "node_mass_kg": 2.0,
+   "interface_nodes": [
+    "e3l",
+    "e3r",
+    "e4l",
+    "e4r",
+    "em1l",
+    "em1r",
+    "em2",
+    "f10ll",
+    "f10rr",
+    "f11ll",
+    "f11rr",
+    "f12ll",
+    "f12rr",
+    "f1l",
+    "f1r",
+    "f5l",
+    "f5r",
+    "fx2l",
+    "fx2r",
+    "fx6l",
+    "fx6r"
+   ],
+   "interface_from": [
+    "covet_body",
+    "covet_engine_1.8_sohc",
+    "covet_suspension_F",
+    "covet_transmission_6M_race"
+   ]
+  },
+  "covet_fueltank": {
+   "slot_type": "covet_fueltank",
+   "node_count": 9,
+   "node_mass_kg": 4.5,
+   "interface_nodes": [
+    "f4l",
+    "f4r",
+    "f9l",
+    "f9r",
+    "r1l",
+    "r1r"
+   ],
+   "interface_from": [
+    "covet_body"
+   ]
+  },
+  "covet_radiator_race": {
+   "slot_type": "covet_radiator",
+   "node_count": 2,
+   "node_mass_kg": 4.4,
+   "interface_nodes": [
+    "f11",
+    "f11ll",
+    "f11rr",
+    "f13ll",
+    "f13rr",
+    "f15",
+    "f15l",
+    "f15r"
+   ],
+   "interface_from": [
+    "covet_body"
+   ]
+  },
+  "covet_suspension_F": {
+   "slot_type": "covet_suspension_F",
+   "node_count": 20,
+   "node_mass_kg": 86.5,
+   "interface_nodes": [
+    "f10ll",
+    "f10rr",
+    "f11",
+    "f11ll",
+    "f11rr",
+    "f12ll",
+    "f12rr",
+    "f13ll",
+    "f13rr",
+    "f19ll",
+    "f19rr",
+    "f1l",
+    "f1ll",
+    "f1r",
+    "f1rr",
+    "f5l",
+    "f5r",
+    "f6l",
+    "f6ll",
+    "f6r",
+    "f6rr",
+    "fs1l",
+    "fs1r",
+    "fw1l",
+    "fw1ll",
+    "fw1r",
+    "fw1rr",
+    "fx2",
+    "fx3l",
+    "fx3r",
+    "fx4l",
+    "fx4r"
+   ],
+   "interface_from": [
+    "covet_body",
+    "covet_enginemounts_heavy",
+    "covet_windshield_light"
+   ]
+  },
+  "covet_suspension_R": {
+   "slot_type": "covet_suspension_R",
+   "node_count": 24,
+   "node_mass_kg": 88.5,
+   "interface_nodes": [
+    "f3l",
+    "f3ll",
+    "f3r",
+    "f3rr",
+    "f4l",
+    "f4ll",
+    "f4r",
+    "f4rr",
+    "f8l",
+    "f8r",
+    "f9l",
+    "f9r",
+    "q6l",
+    "q6r",
+    "q7l",
+    "q7r",
+    "r1l",
+    "r1r",
+    "r2l",
+    "r2r",
+    "r3l",
+    "r3r",
+    "r5l",
+    "r5r",
+    "rs1l",
+    "rs1r",
+    "rw1l",
+    "rw1ll",
+    "rw1r",
+    "rw1rr"
+   ],
+   "interface_from": [
+    "covet_body"
+   ]
+  },
+  "covet_steering_rally": {
+   "slot_type": "covet_steering",
+   "node_count": 8,
+   "node_mass_kg": 34.0,
+   "interface_nodes": [
+    "fx2l",
+    "fx2r",
+    "fx5l",
+    "fx5r",
+    "fx6l",
+    "fx6r"
+   ],
+   "interface_from": [
+    "covet_suspension_F"
+   ]
+  },
+  "covet_swaybar_F_race": {
+   "slot_type": "covet_swaybar_F",
+   "node_count": 4,
+   "node_mass_kg": 10.0,
+   "interface_nodes": [
+    "arbf3l",
+    "arbf3r",
+    "f1l",
+    "f1r",
+    "f2l",
+    "f2r",
+    "f5l",
+    "f5r",
+    "fx2l",
+    "fx2r",
+    "fx4l",
+    "fx4r",
+    "fx6l",
+    "fx6r"
+   ],
+   "interface_from": [
+    "covet_body",
+    "covet_suspension_F"
+   ]
+  },
+  "covet_coilover_F_rally": {
+   "slot_type": "covet_coilover_F",
+   "node_count": 0,
+   "node_mass_kg": 0,
+   "interface_nodes": [
+    "fh1l",
+    "fh1r",
+    "fh4l",
+    "fh4r",
+    "fs1l",
+    "fs1r"
+   ],
+   "interface_from": [
+    "covet_body",
+    "covet_steering_rally",
+    "covet_suspension_F"
+   ]
+  },
+  "covet_coilover_R_rally": {
+   "slot_type": "covet_coilover_R",
+   "node_count": 0,
+   "node_mass_kg": 0,
+   "interface_nodes": [
+    "rh1l",
+    "rh1r",
+    "rs1l",
+    "rs1r",
+    "rsp2l",
+    "rsp2r"
+   ],
+   "interface_from": [
+    "covet_body",
+    "covet_suspension_R"
+   ]
+  },
+  "covet_wheeldata_F": {
+   "slot_type": "covet_wheeldata_F",
+   "node_count": 0,
+   "node_mass_kg": 0,
+   "interface_nodes": [
+    "fh6l",
+    "fh6r",
+    "fw1l",
+    "fw1ll",
+    "fw1r",
+    "fw1rr"
+   ],
+   "interface_from": [
+    "covet_suspension_F"
+   ]
+  },
+  "covet_body": {
+   "slot_type": "covet_body",
+   "node_count": 135,
+   "node_mass_kg": 319.0,
+   "interface_nodes": [
+    "e1l",
+    "e1r",
+    "e2l",
+    "e2r",
+    "e3l",
+    "e3r",
+    "e4l",
+    "e4r",
+    "f13l",
+    "f13r",
+    "fx1l",
+    "fx1r",
+    "rb2",
+    "rb2l",
+    "rb2ll",
+    "rb2r",
+    "rb2rr",
+    "rb4ll",
+    "rb4rr",
+    "rp1",
+    "rp1l",
+    "rp1ll",
+    "rp1r",
+    "rp1rr",
+    "rp2l",
+    "rp2ll",
+    "rp2r",
+    "rp2rr",
+    "rp3",
+    "rp3l",
+    "rp3r",
+    "rp4l",
+    "rp4r",
+    "wi1"
+   ],
+   "interface_from": [
+    "covet_bumper_R",
+    "covet_engine_1.8_sohc",
+    "covet_fascia_R",
+    "covet_suspension_F",
+    "covet_windshield_light"
+   ]
+  }
+ },
+ "mass": {
+  "total_node_mass_kg": 1071.02,
+  "power_unit_node_mass_kg": 186,
+  "_note": "Power unit = engine 142 + gearbox 24 + differential 18 + mount 2 kg. The 120 kg engine estimate in the editor's components is replaced by these values."
+ },
+ "stiffness": {
+  "beams": 3316,
+  "k_over_mu_median": 1258333,
+  "k_over_mu_p90": 2383941,
+  "k_over_mu_p99": 3765371,
+  "k_over_mu_max": 6629124,
+  "_note": "k / mu in 1/s^2 over all active beams. The FBeam stability cap 0.25·(2/dt)^2 = 4.0e6 at 2000 Hz sits above the vanilla p99 (3.8e6); only a few vanilla suspension and steering beams exceed it (max 6.6e6). This supports the cap (regulations 8.9.6)."
+ }
+}

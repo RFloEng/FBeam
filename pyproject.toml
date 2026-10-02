@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fbeam-checker"
+version = "0.1.0"
+description = "Offline technical checker for FBeam, a BeamNG.drive rallycross spec series"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "RFloEng" }]
+requires-python = ">=3.10"
+dependencies = []
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Games/Entertainment :: Simulation",
+]
+
+[project.urls]
+Homepage = "https://github.com/RFloEng/FBeam"
+Issues = "https://github.com/RFloEng/FBeam/issues"
+
+[project.scripts]
+fbeam-check = "fbeam_checker.cli:main"
+
+[tool.setuptools]
+packages = ["fbeam_checker"]

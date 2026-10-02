@@ -1,0 +1,12 @@
+{
+  "format": 2,
+  "model": "fbeam_demo",
+  "parts": {
+    "fbeam_demo_chassis": "fbeam_demo_chassis"
+  },
+  "vars": {
+    "$demo_arb_F": 25000,
+    "$tirepressure_F": 26,
+    "$tirepressure_R": 24
+  }
+}

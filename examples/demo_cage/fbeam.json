@@ -1,0 +1,9 @@
+{
+  "team": "Demo Team",
+  "car_id": "FB-CAGE",
+  "beamng_version": "TBD",
+  "pc": "vehicles/fbeam_demo_cage/race.pc",
+  "chassis_parts": [
+    "fbeam_demo_cage"
+  ]
+}
